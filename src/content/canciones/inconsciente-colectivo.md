@@ -1,7 +1,7 @@
 ---
 titulo: "Inconsciente Colectivo"
 autor: "Charly García"
-categoria: "Otra"
+categoria: "Rock"
 orden: 1
 ---
 
