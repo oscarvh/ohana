@@ -2,7 +2,7 @@ backend:
   name: github
   repo: oscarvh/ohana
   branch: main
-  # base_url: https://sveltia-cms-auth.TU-SUBDOMINIO.workers.dev   # <-- descomentar cuando esté el worker de auth
+  base_url: https://sveltia-cms-auth.oscarvh.workers.dev
 
 media_folder: "src/images"
 public_folder: "/images"
