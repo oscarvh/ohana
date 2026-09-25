@@ -137,14 +137,14 @@
         <div class="grid grid-cols-2 gap-space-md">
           <label class="flex flex-col gap-space-xs">
             <span class="text-label-md text-on-surface-variant">Categoría</span>
-            <select id="campo-categoria"
-                    class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20">
-              <option value="">—</option>
+            <input id="campo-categoria" type="text" list="lista-categorias" placeholder="Ej: Folklore"
+                   class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            <datalist id="lista-categorias">
               <option>Navideña</option>
               <option>Patria</option>
               <option>Infantil</option>
               <option>Otra</option>
-            </select>
+            </datalist>
           </label>
           <label class="flex flex-col gap-space-xs">
             <span class="text-label-md text-on-surface-variant">Orden (posición en la lista)</span>
