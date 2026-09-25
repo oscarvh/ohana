@@ -1,6 +1,7 @@
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addPassthroughCopy("src/admin");
+  eleventyConfig.addPassthroughCopy("src/editar");
   eleventyConfig.addPassthroughCopy({ "src/images": "images" });
 
   eleventyConfig.addCollection("canciones", (api) =>

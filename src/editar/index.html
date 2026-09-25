@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#00565a">
+  <title>Editar canciones · Cancionero Ohana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+      --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+      --color-surface: #fbf9f5;
+      --color-surface-container-lowest: #ffffff;
+      --color-surface-container-low: #f5f3ef;
+      --color-surface-container: #efeeea;
+      --color-surface-container-high: #eae8e4;
+      --color-on-surface: #1b1c1a;
+      --color-on-surface-variant: #3e4949;
+      --color-outline: #6e797a;
+      --color-outline-variant: #bec9c9;
+      --color-primary: #00565a;
+      --color-on-primary: #ffffff;
+      --color-primary-container: #0e7075;
+      --color-on-primary-container: #a0f0f6;
+      --color-secondary: #a33d23;
+      --color-on-secondary: #ffffff;
+      --color-error: #ba1a1a;
+      --color-error-container: #ffdad6;
+      --color-on-error-container: #93000a;
+      --text-headline-md: 1.375rem;
+      --text-headline-md--line-height: 1.75rem;
+      --text-title-lg: 1.125rem;
+      --text-title-lg--line-height: 1.625rem;
+      --text-body-md: 1rem;
+      --text-body-md--line-height: 1.6rem;
+      --text-body-sm: 0.875rem;
+      --text-body-sm--line-height: 1.375rem;
+      --text-label-md: 0.875rem;
+      --text-label-md--line-height: 1.25rem;
+      --spacing-space-xs: 0.25rem;
+      --spacing-space-sm: 0.5rem;
+      --spacing-space-md: 1rem;
+      --spacing-space-lg: 1.5rem;
+      --spacing-space-xl: 2.25rem;
+    }
+    @layer base {
+      html, body { width: 100%; margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      ::-webkit-scrollbar { display: none; }
+      input, textarea, select { outline: none; }
+    }
+  </style>
+</head>
+<body class="bg-surface font-sans text-body-md text-on-surface antialiased min-h-screen pb-safe">
+
+  <!-- Pantalla de ingreso -->
+  <section id="pantalla-login" class="hidden min-h-screen flex items-center justify-center p-space-md">
+    <div class="w-full max-w-sm bg-surface-container-lowest rounded-2xl shadow-lg p-space-lg">
+      <div class="flex flex-col items-center gap-space-sm mb-space-lg">
+        <span class="material-symbols-outlined text-[44px] text-primary">lyrics</span>
+        <h1 class="font-serif text-headline-md text-primary">Cancionero Ohana</h1>
+        <p class="text-body-sm text-on-surface-variant text-center">Ingresá con tu usuario y contraseña para editar las canciones.</p>
+      </div>
+      <form id="form-login" class="flex flex-col gap-space-md">
+        <label class="flex flex-col gap-space-xs">
+          <span class="text-label-md text-on-surface-variant">Usuario</span>
+          <input id="login-usuario" type="text" autocomplete="username" required
+                 class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20" />
+        </label>
+        <label class="flex flex-col gap-space-xs">
+          <span class="text-label-md text-on-surface-variant">Contraseña</span>
+          <input id="login-contrasena" type="password" autocomplete="current-password" required
+                 class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20" />
+        </label>
+        <p id="login-error" class="hidden text-body-sm text-error"></p>
+        <button type="submit"
+                class="mt-space-sm rounded-full bg-primary text-on-primary font-semibold py-3 px-6 text-center hover:bg-primary-container transition-colors">
+          Ingresar
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- App -->
+  <main id="pantalla-app" class="hidden max-w-2xl mx-auto p-space-md flex flex-col gap-space-lg">
+
+    <header class="flex items-center justify-between pt-space-md">
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-[28px] text-primary">lyrics</span>
+        <h1 class="font-serif text-headline-md text-primary">Editar canciones</h1>
+      </div>
+      <button id="btn-salir" title="Salir" class="rounded-full bg-surface-container px-3 py-2 text-body-sm text-on-surface-variant hover:bg-surface-container-high transition-colors">
+        Salir
+      </button>
+    </header>
+
+    <div id="barra-mensaje" class="hidden rounded-xl px-space-md py-space-sm text-body-sm"></div>
+
+    <!-- Lista de canciones -->
+    <section id="vista-lista" class="flex flex-col gap-space-md">
+      <button id="btn-nueva"
+              class="flex items-center justify-center gap-space-sm rounded-full bg-primary text-on-primary font-semibold py-3 px-6 hover:bg-primary-container transition-colors">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        Nueva canción
+      </button>
+      <p id="lista-cargando" class="text-body-sm text-on-surface-variant">Cargando canciones…</p>
+      <ul id="lista-canciones" class="flex flex-col gap-space-sm"></ul>
+    </section>
+
+    <!-- Editor -->
+    <section id="vista-editor" class="hidden flex-col gap-space-md">
+      <button id="btn-volver" class="flex items-center gap-space-xs text-body-sm text-on-surface-variant hover:text-primary transition-colors w-fit">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        Volver a la lista
+      </button>
+
+      <form id="form-editor" class="flex flex-col gap-space-md bg-surface-container-lowest rounded-2xl shadow-lg p-space-lg">
+        <h2 id="editor-titulo" class="font-serif text-title-lg">Nueva canción</h2>
+
+        <label class="flex flex-col gap-space-xs">
+          <span class="text-label-md text-on-surface-variant">Título <span class="text-secondary">*</span></span>
+          <input id="campo-titulo" type="text" required
+                 class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20" />
+        </label>
+
+        <label class="flex flex-col gap-space-xs">
+          <span class="text-label-md text-on-surface-variant">Autor / Arreglo</span>
+          <input id="campo-autor" type="text"
+                 class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20" />
+        </label>
+
+        <div class="grid grid-cols-2 gap-space-md">
+          <label class="flex flex-col gap-space-xs">
+            <span class="text-label-md text-on-surface-variant">Categoría</span>
+            <select id="campo-categoria"
+                    class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20">
+              <option value="">—</option>
+              <option>Navideña</option>
+              <option>Patria</option>
+              <option>Infantil</option>
+              <option>Otra</option>
+            </select>
+          </label>
+          <label class="flex flex-col gap-space-xs">
+            <span class="text-label-md text-on-surface-variant">Orden (posición en la lista)</span>
+            <input id="campo-orden" type="number" min="1" step="1"
+                   class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20" />
+          </label>
+        </div>
+
+        <label class="flex flex-col gap-space-xs">
+          <span class="text-label-md text-on-surface-variant">Letra</span>
+          <textarea id="campo-letra" rows="14" placeholder="Pegá acá la letra de la canción…"
+                    class="rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-body-md leading-relaxed font-mono focus:border-primary focus:ring-2 focus:ring-primary/20"></textarea>
+        </label>
+
+        <div class="flex flex-wrap gap-space-md pt-space-sm">
+          <button type="submit"
+                  class="flex-1 flex items-center justify-center gap-space-sm rounded-full bg-primary text-on-primary font-semibold py-3 px-6 hover:bg-primary-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">save</span>
+            Guardar
+          </button>
+          <button type="button" id="btn-eliminar"
+                  class="hidden items-center justify-center gap-space-sm rounded-full bg-error-container text-on-error-container font-semibold py-3 px-6 hover:brightness-95 transition-[filter]">
+            <span class="material-symbols-outlined text-[20px]">delete</span>
+            Eliminar
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+<script>
+(function () {
+  var API = "https://ohana-cms-api.oscarvh.workers.dev";
+  var TOKEN_KEY = "ohana_token";
+  var API = "https://ohana-cms-api.oscarvh.workers.dev";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var tokenActual = null;
+  var cancionActual = null; // slug de la canción en edición, o null si es nueva
+
+  // ---- utilidades ----
+  function mostrarPantalla(nombre) {
+    $("pantalla-login").classList.add("hidden");
+    $("pantalla-app").classList.add("hidden");
+    $(nombre).classList.remove("hidden");
+    if (nombre === "pantalla-app") $(nombre).classList.add("flex");
+  }
+
+  function mensaje(texto, tipo) {
+    var barra = $("barra-mensaje");
+    barra.textContent = texto;
+    barra.className = "rounded-xl px-space-md py-space-sm text-body-sm " +
+      (tipo === "error"
+        ? "bg-error-container text-on-error-container"
+        : "bg-surface-container-high text-on-surface");
+    barra.classList.remove("hidden");
+    clearTimeout(barra._t);
+    barra._t = setTimeout(function () { barra.classList.add("hidden"); }, 4000);
+  }
+
+  async function api(ruta, opciones) {
+    opciones = opciones || {};
+    var res = await fetch(API + ruta, {
+      method: opciones.method || "GET",
+      headers: Object.assign(
+        { "Content-Type": "application/json" },
+        tokenActual ? { Authorization: "Bearer " + tokenActual } : {}
+      ),
+      body: opciones.body ? JSON.stringify(opciones.body) : undefined,
+    });
+    var data;
+    try { data = await res.json(); } catch { data = {}; }
+    if (!res.ok) {
+      if (res.status === 401) {
+        tokenActual = null;
+        sessionStorage.removeItem(TOKEN_KEY);
+        mostrarPantalla("pantalla-login");
+      }
+      throw new Error(data.error || "Ocurrió un error inesperado");
+    }
+    return data;
+  }
+
+  // ---- login ----
+  $("form-login").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var usuario = $("login-usuario").value.trim();
+    var contrasena = $("login-contrasena").value;
+    $("login-error").classList.add("hidden");
+    var btn = e.target.querySelector("button[type=submit]");
+    btn.disabled = true;
+    try {
+      var data = await api("/login", { method: "POST", body: { usuario: usuario, contrasena: contrasena } });
+      tokenActual = data.token;
+      sessionStorage.setItem(TOKEN_KEY, tokenActual);
+      iniciarApp();
+    } catch (err) {
+      $("login-error").textContent = err.message;
+      $("login-error").classList.remove("hidden");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  $("btn-salir").addEventListener("click", function () {
+    tokenActual = null;
+    sessionStorage.removeItem(TOKEN_KEY);
+    $("login-contrasena").value = "";
+    mostrarPantalla("pantalla-login");
+  });
+
+  function iniciarApp() {
+    mostrarPantalla("pantalla-app");
+    mostrarLista();
+    cargarCanciones();
+  }
+
+  // ---- lista ----
+  function mostrarLista() {
+    $("vista-editor").classList.add("hidden");
+    $("vista-editor").classList.remove("flex");
+    $("vista-lista").classList.remove("hidden");
+  }
+
+  async function cargarCanciones() {
+    var ul = $("lista-canciones");
+    ul.innerHTML = "";
+    $("lista-cargando").classList.remove("hidden");
+    try {
+      var data = await api("/canciones");
+      var canciones = data.canciones.slice().sort(function (a, b) {
+        var oa = parseInt(a.orden, 10); var ob = parseInt(b.orden, 10);
+        oa = isNaN(oa) ? 999 : oa; ob = isNaN(ob) ? 999 : ob;
+        return oa - ob || a.titulo.localeCompare(b.titulo);
+      });
+      $("lista-cargando").classList.add("hidden");
+      if (!canciones.length) {
+        ul.innerHTML = '<li class="text-body-sm text-on-surface-variant">Todavía no hay canciones.</li>';
+        return;
+      }
+      canciones.forEach(function (c) {
+        var li = document.createElement("li");
+        li.className = "bg-surface-container-lowest rounded-xl shadow-sm px-space-md py-space-sm flex items-center justify-between gap-space-sm";
+        var info = document.createElement("div");
+        info.className = "min-w-0";
+        var t = document.createElement("p");
+        t.className = "font-semibold truncate";
+        t.textContent = c.titulo;
+        var meta = [];
+        if (c.autor) meta.push(c.autor);
+        if (c.categoria) meta.push(c.categoria);
+        var m = document.createElement("p");
+        m.className = "text-body-sm text-on-surface-variant truncate";
+        m.textContent = meta.join(" · ");
+        info.appendChild(t); if (meta.length) info.appendChild(m);
+        var btn = document.createElement("button");
+        btn.className = "flex items-center gap-space-xs text-primary font-semibold text-body-sm px-3 py-2 rounded-full hover:bg-surface-container transition-colors shrink-0";
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">edit</span>Editar';
+        btn.addEventListener("click", function () { abrirEditor(c); });
+        li.appendChild(info); li.appendChild(btn);
+        ul.appendChild(li);
+      });
+    } catch (err) {
+      $("lista-cargando").classList.add("hidden");
+      mensaje(err.message, "error");
+    }
+  }
+
+  // ---- editor ----
+  function mostrarEditor() {
+    $("vista-lista").classList.add("hidden");
+    $("vista-editor").classList.remove("hidden");
+    $("vista-editor").classList.add("flex");
+  }
+
+  function abrirEditor(cancion) {
+    cancionActual = cancion ? cancion.slug : null;
+    $("editor-titulo").textContent = cancion ? "Editar: " + cancion.titulo : "Nueva canción";
+    $("campo-titulo").value = cancion ? cancion.titulo : "";
+    $("campo-autor").value = cancion ? cancion.autor : "";
+    $("campo-categoria").value = cancion ? cancion.categoria : "";
+    $("campo-orden").value = cancion ? cancion.orden : "";
+    $("campo-letra").value = cancion ? cancion.letra : "";
+    $("btn-eliminar").className = cancion
+      ? "flex items-center justify-center gap-space-sm rounded-full bg-error-container text-on-error-container font-semibold py-3 px-6 hover:brightness-95 transition-[filter]"
+      : "hidden items-center justify-center gap-space-sm rounded-full bg-error-container text-on-error-container font-semibold py-3 px-6 hover:brightness-95 transition-[filter]";
+    mostrarEditor();
+  }
+
+  $("btn-nueva").addEventListener("click", function () { abrirEditor(null); });
+  $("btn-volver").addEventListener("click", function () {
+    mostrarLista();
+    cargarCanciones();
+  });
+
+  $("form-editor").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var datos = {
+      titulo: $("campo-titulo").value.trim(),
+      autor: $("campo-autor").value.trim(),
+      categoria: $("campo-categoria").value,
+      orden: $("campo-orden").value,
+      letra: $("campo-letra").value,
+    };
+    if (!datos.titulo) { mensaje("Escribí el título de la canción.", "error"); return; }
+    var btn = e.target.querySelector("button[type=submit]");
+    btn.disabled = true;
+    try {
+      if (cancionActual) {
+        await api("/canciones/" + cancionActual, { method: "PUT", body: datos });
+        mensaje('Guardado ✔ La canción "' + datos.titulo + '" se actualizó. El sitio se renueva en un minuto.', "ok");
+      } else {
+        var r = await api("/canciones", { method: "POST", body: datos });
+        cancionActual = r.slug;
+        mensaje('Guardado ✔ La canción "' + datos.titulo + '" se agregó. El sitio se renueva en un minuto.', "ok");
+      }
+      mostrarLista();
+      cargarCanciones();
+    } catch (err) {
+      mensaje(err.message, "error");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  $("btn-eliminar").addEventListener("click", async function () {
+    if (!cancionActual) return;
+    var titulo = $("campo-titulo").value.trim() || "esta canción";
+    if (!confirm("¿Seguro que querés eliminar '" + titulo + "'? Esta acción no se puede deshacer.")) return;
+    try {
+      await api("/canciones/" + cancionActual, { method: "DELETE" });
+      mensaje("La canción se eliminó. El sitio se renueva en un minuto.", "ok");
+      mostrarLista();
+      cargarCanciones();
+    } catch (err) {
+      mensaje(err.message, "error");
+    }
+  });
+
+  // ---- arranque ----
+  tokenActual = sessionStorage.getItem(TOKEN_KEY);
+  if (tokenActual) {
+    iniciarApp();
+  } else {
+    mostrarPantalla("pantalla-login");
+    $("login-usuario").focus();
+  }
+})();
+</script>
+</body>
+</html>
