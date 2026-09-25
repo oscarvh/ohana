@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project
-Static songbook ("Cancionero") for the Orquesta Escuela de Punta Indio. Eleventy v3 (CommonJS `.eleventy.js`), Spanish-language content and UI, deployed to GitHub Pages. Sveltia CMS admin lives in `src/admin/`.
+Static songbook ("Cancionero") for the Orquesta Escuela de Punta Indio. Eleventy v3 (CommonJS `.eleventy.js`), Spanish-language content and UI. Deployed to GitHub Pages at https://oscarvh.github.io/ohana/ (repo `oscarvh/ohana`, branch `main`, Pages source = GitHub Actions). Sveltia CMS admin lives in `src/admin/`.
 
 ## Environment gotcha (Windows)
 This repo lives in WSL and is opened from Windows over a UNC path. `npm run ...` fails there because cmd.exe rejects UNC paths. Run Node commands inside WSL instead:
@@ -28,7 +28,6 @@ The dev port must be free on the **Windows** side too, not just inside WSL: Wind
 - `_site/` is generated output; never edit it by hand.
 
 ## Spec vs. reality
-`ohana-especificaciones.md` is the full intended design. Now implemented: `src/admin/` (Sveltia CMS `index.html` + `config.yml`, passed through to `/admin/`), `.github/workflows/deploy.yml`, and a git repo on `main` (`.gitignore` excludes `node_modules/` and `_site/`). Still pending / manual:
-- `src/admin/config.yml` has `repo: TU-USUARIO/ohana` — replace with the real owner/repo, and set `base_url` once the `sveltia-cms-auth` Cloudflare Worker exists.
+`ohana-especificaciones.md` is the full intended design. Implemented: `src/admin/` (Sveltia CMS `index.html` + `config.yml`, passed through to `/admin/`), `.github/workflows/deploy.yml`, git repo on `main` pushed to `oscarvh/ohana`, and Pages enabled (source = GitHub Actions). Still pending:
+- `src/admin/config.yml` needs `base_url` set once the `sveltia-cms-auth` Cloudflare Worker exists; until then the CMS login does not work in production.
 - `src/css/style.css` is a placeholder; `src/images/` holds `logo-ohana.png` and is passed through to `/images` for CMS media.
-- No git remote yet; first push + setting Pages source to "GitHub Actions" is manual.
