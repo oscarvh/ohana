@@ -1,7 +1,10 @@
 # AGENTS.md
 
 ## Project
-Static songbook ("Cancionero") for the Orquesta Escuela de Punta Indio. Eleventy v3 (CommonJS `.eleventy.js`), Spanish-language content and UI. Deployed to GitHub Pages at https://oscarvh.github.io/ohana/ (repo `oscarvh/ohana`, branch `main`, Pages source = GitHub Actions). Sveltia CMS admin lives in `src/admin/`.
+Static songbook ("Cancionero") for the Orquesta Escuela de Punta Indio. Eleventy v3 (CommonJS `.eleventy.js`), Spanish-language content and UI. Deployed to GitHub Pages at https://oscarvh.github.io/ohana/ (repo `oscarvh/ohana`, branch `main`, Pages source = GitHub Actions).
+
+## Mini-CMS (/editar)
+Non-technical editors (a teacher) manage songs at `/ohana/editar/` with plain username/password — no GitHub account involved. The page (`src/editar/index.html`, passed through) is a vanilla JS SPA that talks to the Cloudflare Worker **ohana-cms-api** (source in `~/proyectos/ohana-cms-api`, deploys with wrangler; URL `https://ohana-cms-api.oscarvh.workers.dev`). The worker authenticates the editor (secrets `ADMIN_USER`/`ADMIN_PASSWORD`, HMAC session tokens signed with `SESSION_SECRET`) and commits song changes to `oscarvh/ohana` via the GitHub API using secret `GH_TOKEN` (a `gho_` token from `gh auth`). Every save/delete is a normal commit on `main`, which triggers the Pages deploy (~1 min). Song file format written by the worker must match the frontmatter contract in "Gotchas" below (JSON-quoted strings via `JSON.stringify`, `orden` as bare int). Sveltia CMS was removed (2026-09): no `src/admin/`, no `sveltia-cms-auth` worker, no GitHub OAuth app.
 
 ## Environment gotcha (Windows)
 This repo lives in WSL and is opened from Windows over a UNC path. `npm run ...` fails there because cmd.exe rejects UNC paths. Run Node commands inside WSL instead:
@@ -28,6 +31,5 @@ The dev port must be free on the **Windows** side too, not just inside WSL: Wind
 - `_site/` is generated output; never edit it by hand.
 
 ## Spec vs. reality
-`ohana-especificaciones.md` is the full intended design. Implemented: `src/admin/` (Sveltia CMS `index.html` + `config.yml`, passed through to `/admin/`), `.github/workflows/deploy.yml`, git repo on `main` pushed to `oscarvh/ohana`, and Pages enabled (source = GitHub Actions). Still pending:
-- `src/admin/config.yml` needs `base_url` set once the `sveltia-cms-auth` Cloudflare Worker exists; until then the CMS login does not work in production.
-- `src/css/style.css` is a placeholder; `src/images/` holds `logo-ohana.png` and is passed through to `/images` for CMS media.
+`ohana-especificaciones.md` is the full intended design. Implemented: the ohana-cms-api Worker + `/editar/` mini-CMS (see above), `.github/workflows/deploy.yml`, git repo on `main` pushed to `oscarvh/ohana`, and Pages enabled (source = GitHub Actions). Still pending:
+- `src/css/style.css` is a placeholder; `src/images/` holds `logo-ohana.png` and is passed through to `/images`.
