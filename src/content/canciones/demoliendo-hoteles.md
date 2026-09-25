@@ -1,7 +1,7 @@
 ---
 titulo: "Demoliendo Hoteles"
 autor: "Charly García"
-categoria: "Otra"
+categoria: "Rock"
 orden: 3
 ---
 
