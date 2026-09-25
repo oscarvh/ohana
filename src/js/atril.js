@@ -66,6 +66,13 @@
       });
       updateWake();
     } else {
+      fsBtn.addEventListener("click", function () {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(function () {});
+        } else {
+          document.documentElement.requestFullscreen().catch(function () {});
+        }
+      });
       document.addEventListener("fullscreenchange", updateFullscreen);
       document.addEventListener("visibilitychange", function () {
         if (!document.hidden && document.fullscreenElement) requestWake();
