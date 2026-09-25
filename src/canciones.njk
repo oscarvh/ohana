@@ -3,7 +3,7 @@ layout: layouts/base.njk
 title: Cancionero
 permalink: /canciones/
 ---
-{% set iconos = ["music_note", "graphic_eq", "piano", "waves", "nature_people", "child_care", "theater_comedy"] %}
+{% set icono_cancion = "music_note" %}
 <main class="w-full max-w-2xl mx-auto px-margin pt-safe pb-24 flex flex-col gap-space-lg">
 
   <!-- Tarjeta de bienvenida / evento -->
@@ -54,7 +54,7 @@ permalink: /canciones/
       data-titulo="{{ c.data.titulo | lower }}" data-autor="{{ c.data.autor | default('') | lower }}" data-categoria="{{ c.data.categoria | default('') }}">
       <div class="flex items-start gap-space-sm">
         <div class="w-12 h-12 rounded-xl {% if loop.first %}bg-gradient-to-tr from-primary to-secondary-container text-on-primary{% else %}bg-surface-container-high text-primary{% endif %} flex items-center justify-center shrink-0 shadow-sm">
-          <span class="material-symbols-outlined text-[26px]">{{ iconos[loop.index0 % 7] }}</span>
+          <span class="material-symbols-outlined text-[26px]">{{ icono_cancion }}</span>
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between gap-1">

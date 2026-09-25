@@ -24,35 +24,55 @@
   if (dec) dec.addEventListener("click", function () { if (idx > 0) { idx--; applyFont(); } });
   applyFont();
 
-  // Mantener pantalla encendida
-  var wakeBtn = document.getElementById("btn-keep-awake");
-  var wakeText = document.getElementById("screen-status-text");
+  // Pantalla completa (mantiene la pantalla encendida mientras dura)
+  var fsBtn = document.getElementById("btn-fullscreen");
+  var fsText = document.getElementById("fullscreen-status-text");
+  var fsIcon = document.getElementById("fullscreen-icon");
   var wakeLock = null;
-  var wakeActive = false;
-  function updateWake() {
-    if (!wakeBtn || !wakeText) return;
-    if (wakeActive) {
-      wakeBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-container text-on-primary text-label-md shadow-sm active:scale-95 transition-all";
-      wakeText.textContent = "Pantalla activa";
+
+  function requestWake() {
+    if (!("wakeLock" in navigator)) return Promise.resolve(null);
+    return navigator.wakeLock.request("screen").then(function (lock) {
+      wakeLock = lock;
+      lock.addEventListener("release", function () { wakeLock = null; });
+      return lock;
+    }).catch(function () { wakeLock = null; return null; });
+  }
+  function releaseWake() {
+    if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; }
+  }
+  function updateFullscreen() {
+    var activo = document.fullscreenElement;
+    if (fsText) fsText.textContent = activo ? "Salir pantalla" : "Pantalla completa";
+    if (fsIcon) fsIcon.textContent = activo ? "fullscreen_exit" : "fullscreen";
+    if (fsBtn) {
+      fsBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-md shadow-sm active:scale-95 transition-all " +
+        (activo ? "bg-primary-container text-on-primary" : "bg-surface-container text-outline");
+    }
+    if (activo) requestWake(); else releaseWake();
+  }
+
+  if (fsBtn) {
+    if (!document.documentElement.requestFullscreen) {
+      // Sin fullscreen (p. ej. iPhone): el botón solo evita que la pantalla se apague
+      var wakeActive = false;
+      var updateWake = function () {
+        wakeActive = !!wakeLock;
+        if (fsText) fsText.textContent = wakeActive ? "Pantalla activa" : "Evitar apagado";
+        if (fsIcon) fsIcon.textContent = wakeActive ? "screen_lock_portrait" : "mobile_off";
+      };
+      fsBtn.addEventListener("click", function () {
+        if (wakeLock) { releaseWake(); requestWake().then(updateWake); } else { requestWake().then(updateWake); }
+      });
+      updateWake();
     } else {
-      wakeBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container text-outline text-label-md shadow-sm active:scale-95 transition-all";
-      wakeText.textContent = "Ahorro batería";
+      document.addEventListener("fullscreenchange", updateFullscreen);
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && document.fullscreenElement) requestWake();
+      });
+      updateFullscreen();
     }
   }
-  function enableWake() {
-    if (!("wakeLock" in navigator)) { updateWake(); return; }
-    navigator.wakeLock.request("screen").then(function (lock) {
-      wakeLock = lock;
-      wakeActive = true;
-      updateWake();
-    }).catch(function () { wakeActive = false; updateWake(); });
-  }
-  function disableWake() {
-    if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; }
-    wakeActive = false;
-    updateWake();
-  }
-  if (wakeBtn) wakeBtn.addEventListener("click", function () { wakeActive ? disableWake() : enableWake(); });
 
   // Favorito
   var favBtn = document.getElementById("btn-fav");

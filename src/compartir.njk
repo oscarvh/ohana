@@ -1,0 +1,77 @@
+---
+layout: layouts/base.njk
+title: Compartir
+permalink: /compartir/
+---
+<main class="w-full max-w-2xl mx-auto px-margin pt-safe pb-24 flex flex-col gap-space-lg">
+
+  <header class="flex items-center gap-space-sm pt-space-md">
+    <a href="{{ '/canciones/' | url }}" aria-label="Volver" class="w-11 h-11 -ml-2 rounded-full flex items-center justify-center text-primary hover:bg-surface-container transition-colors active:scale-95">
+      <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+    </a>
+    <h1 class="font-serif text-headline-md text-on-surface">Compartir el cancionero</h1>
+  </header>
+
+  <section class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm flex flex-col items-center gap-space-md text-center">
+    <div class="w-12 h-12 rounded-full bg-primary-fixed/40 flex items-center justify-center text-primary">
+      <span class="material-symbols-outlined text-[26px]">share</span>
+    </div>
+    <h2 class="font-serif text-headline-md text-primary tracking-tight">Invitá a la familia a cantar</h2>
+    <p class="text-body-sm text-on-surface-variant max-w-xs">
+      Mostrale este código QR a un familiar para que escanee con la cámara del celular,
+      o pasale el enlace de abajo.
+    </p>
+
+    <img src="{{ '/images/qr-ohana.png' | url }}" alt="Código QR del Cancionero Ohana" class="w-56 h-56 rounded-2xl shadow-md bg-surface-container-lowest">
+
+    <p id="enlace-texto" class="text-body-sm text-primary font-semibold select-all">https://oscarvh.github.io/ohana/</p>
+
+    <div class="flex flex-wrap justify-center gap-space-sm w-full">
+      <button id="btn-copiar" type="button"
+        class="flex items-center justify-center gap-1.5 flex-1 min-w-36 rounded-full bg-surface-container text-primary font-semibold py-3 px-5 text-label-md shadow-sm active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-[20px]">content_copy</span>
+        Copiar enlace
+      </button>
+      <button id="btn-compartir" type="button"
+        class="flex items-center justify-center gap-1.5 flex-1 min-w-36 rounded-full bg-primary text-on-primary font-semibold py-3 px-5 text-label-md shadow-sm active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-[20px]">share</span>
+        Compartir
+      </button>
+    </div>
+
+    <p id="mensaje-copiado" class="hidden text-label-md text-secondary font-semibold">Enlace copiado ✔</p>
+  </section>
+
+  <footer class="text-center flex flex-col items-center gap-1">
+    <div class="flex items-center justify-center gap-1.5 text-secondary">
+      <span class="material-symbols-outlined text-[18px]">favorite</span>
+      <span class="text-label-sm font-semibold tracking-wider uppercase">Orquesta Escuela de Punta Indio</span>
+      <span class="material-symbols-outlined text-[18px]">favorite</span>
+    </div>
+    <p class="text-body-sm text-on-surface-variant italic">"Música para compartir, crecer y sentirnos en casa"</p>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var ENLACE = "https://oscarvh.github.io/ohana/";
+    var btnCopiar = document.getElementById("btn-copiar");
+    var btnCompartir = document.getElementById("btn-compartir");
+    var aviso = document.getElementById("mensaje-copiado");
+    function mostrarAviso() {
+      aviso.classList.remove("hidden");
+      clearTimeout(aviso._t);
+      aviso._t = setTimeout(function () { aviso.classList.add("hidden"); }, 3000);
+    }
+    btnCopiar.addEventListener("click", function () {
+      navigator.clipboard.writeText(ENLACE).then(mostrarAviso).catch(function () {});
+    });
+    btnCompartir.addEventListener("click", function () {
+      if (navigator.share) {
+        navigator.share({ title: "Cancionero Ohana", text: "Cancionero de la Orquesta Escuela de Punta Indio", url: ENLACE }).catch(function () {});
+      } else {
+        navigator.clipboard.writeText(ENLACE).then(function () { mostrarAviso(); }).catch(function () {});
+      }
+    });
+  })();
+</script>
