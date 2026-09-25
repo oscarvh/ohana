@@ -1,9 +1,8 @@
 ---
 titulo: "Cancion De Prueba"
-autor: "Test"
+autor: "Test 2"
 categoria: "Otra"
 orden: 99
 ---
 
-Esta es una letra
-de prueba
+Letra actualizada
