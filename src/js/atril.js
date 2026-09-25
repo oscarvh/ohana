@@ -10,8 +10,8 @@
 
   // Tamaño de letra
   var stream = document.getElementById("lyrics-stream");
-  var sizes = ["1rem", "1.15rem", "1.35rem", "1.5rem", "1.75rem", "2rem"];
-  var lines = ["1.7rem", "2rem", "2.25rem", "2.5rem", "2.9rem", "3.3rem"];
+  var sizes = ["1rem", "1.2rem", "1.4rem", "1.6rem", "1.85rem", "2.1rem", "2.4rem"];
+  var lines = ["1.7rem", "2rem", "2.35rem", "2.7rem", "3.1rem", "3.5rem", "4rem"];
   var idx = 1;
   function applyFont() {
     if (!stream) return;
@@ -53,6 +53,7 @@
   function setModo(activo) {
     modoActivo = activo;
     document.documentElement.classList.toggle("modo-letra", activo);
+    if (document.body) document.body.classList.toggle("modo-letra", activo);
     if (activo) window.scrollTo(0, 0);
     pintarBoton(activo);
     if (activo) requestWake();

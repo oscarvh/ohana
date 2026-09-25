@@ -38,12 +38,12 @@ layout: layouts/base.njk
 
     <!-- Controles de lectura (ergonómicos) -->
     <style>
-      html.modo-letra header { display: none !important; }
-      html.modo-letra #nav-inferior { display: none !important; }
-      html.modo-letra #info-cancion { display: none !important; }
-      html.modo-letra main { padding-top: 1rem !important; }
-      html.modo-letra #controles-lectura { top: 0 !important; }
-      html.modo-letra #letra-card { margin-bottom: 0 !important; }
+      .modo-letra header, :fullscreen header { display: none !important; }
+      .modo-letra #nav-inferior, :fullscreen #nav-inferior { display: none !important; }
+      .modo-letra #info-cancion, :fullscreen #info-cancion { display: none !important; }
+      .modo-letra main, :fullscreen main { padding-top: 1rem !important; }
+      .modo-letra #controles-lectura, :fullscreen #controles-lectura { top: 0 !important; }
+      .modo-letra #letra-card { margin-bottom: 0 !important; }
     </style>
     <div id="controles-lectura" class="sticky top-16 z-30 py-space-xs mb-space-md bg-surface/95 backdrop-blur-md">
       <div class="w-full bg-surface-container-high rounded-full p-1.5 shadow-md flex items-center justify-between gap-2">
@@ -60,10 +60,10 @@ layout: layouts/base.njk
     </div>
 
     <!-- Letra -->
-    <section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm mb-space-md">
+    <section id="letra-card" class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm mb-space-md">
       <div id="lyrics-stream" class="text-body-lyrics text-on-surface [&_p]:mb-space-md [&_p:last-child]:mb-0">{{ content | safe }}</div>
     </section>
   </div>
 </main>
 
-<script src="{{ '/js/atril.js' | url }}" defer></script>
+<script src="{{ '/js/atril.js' | url }}?v=3" defer></script>
