@@ -43,6 +43,7 @@
   }
   function updateFullscreen() {
     var activo = document.fullscreenElement;
+    document.documentElement.classList.toggle("modo-letra", !!activo);
     if (fsText) fsText.textContent = activo ? "Salir pantalla" : "Pantalla completa";
     if (fsIcon) fsIcon.textContent = activo ? "fullscreen_exit" : "fullscreen";
     if (fsBtn) {

@@ -37,7 +37,13 @@ layout: layouts/base.njk
     </div>
 
     <!-- Controles de lectura (ergonómicos) -->
-    <div class="sticky top-16 z-30 py-space-xs mb-space-md bg-surface/95 backdrop-blur-md">
+    <style>
+      html.modo-letra header { display: none !important; }
+      html.modo-letra #nav-inferior { display: none !important; }
+      html.modo-letra main { padding-top: 1rem !important; }
+      html.modo-letra #controles-lectura { top: 0 !important; }
+    </style>
+    <div id="controles-lectura" class="sticky top-16 z-30 py-space-xs mb-space-md bg-surface/95 backdrop-blur-md">
       <div class="w-full bg-surface-container-high rounded-full p-1.5 shadow-md flex items-center justify-between gap-2">
         <div class="flex items-center bg-surface-container-lowest rounded-full px-1 shadow-sm">
           <button id="font-decrease" type="button" aria-label="Reducir letra" class="w-9 h-9 rounded-full flex items-center justify-center text-primary text-title-lg active:scale-90 transition-transform">A-</button>

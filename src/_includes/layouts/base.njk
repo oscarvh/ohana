@@ -113,7 +113,7 @@
   {{ content | safe }}
 
   {% if not hideNav %}
-  <nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-4px_20px_rgba(104,63,97,0.06)]" aria-label="Navegación principal">
+  <nav id="nav-inferior" class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-4px_20px_rgba(104,63,97,0.06)]" aria-label="Navegación principal">
     <div class="flex justify-around items-center h-16 px-margin">
       <a href="{{ '/canciones/' | url }}" class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-primary font-semibold transition-colors" aria-current="page">
         <span class="material-symbols-outlined text-[24px]">queue_music</span>
