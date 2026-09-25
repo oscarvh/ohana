@@ -1,7 +1,7 @@
 ---
 titulo: "La Vida Es Un Carnaval"
 autor: "Celia Cruz"
-categoria: "Otra"
+categoria: "Rock"
 orden: 2
 ---
 
