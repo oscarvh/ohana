@@ -29,7 +29,18 @@ The dev port must be free on the **Windows** side too, not just inside WSL: Wind
 - `src/content/canciones/canciones.json` is the directory data file: sets `layout: layouts/cancion.njk`, `tags: canciones`, and `permalink: /canciones/{{ titulo | slugify }}/`.
 - The `canciones` collection (`.eleventy.js:6`) sorts by `orden`, defaulting missing values to `999`.
 - `_site/` is generated output; never edit it by hand.
+- `src/editar/index.html` and `src/compartir.njk` each carry their own copy of the `@theme` block — when changing design tokens, update `base.njk`, `editar/index.html` and (for compartir) keep it in sync. The `/editar/` page talks to the worker at a hardcoded `API` const in its inline script.
+- `atril.js` is referenced with a manual cache-buster (`?v=3` in `cancion.njk`) because GitHub Pages caches assets for 10 min. Bump the version whenever `atril.js` changes, or users may get stale JS.
+- Fullscreen reading mode: clicking "Pantalla completa" requests fullscreen AND toggles class `modo-letra` on `<html>`/`<body>`; plain CSS in `cancion.njk` (`.modo-letra` + `:fullscreen` selectors) hides header, `#nav-inferior` and `#info-cancion`. On browsers without the Fullscreen API (iPhone) it degrades to a wake-lock-only reading mode. Letter size steps live in `atril.js` (`sizes`/`lines`, max 2.4rem).
+- QR in `src/images/qr-ohana.png` is a static pre-generated image (QRCode npm pkg, teal `#00565a` on cream `#fbf9f5`). If the site URL ever changes, regenerate it; the displayed URL is also hardcoded in `compartir.njk` (ENLACE const).
+
+## Pendientes / seguridad (2026-09-25)
+- Secrets exposed in chat during the session — rotate when convenient: the `gho_` GitHub token (`gh auth token`, used by the worker as `GH_TOKEN`), the `ADMIN_PASSWORD`, and delete the GitHub OAuth app "Cancionero Ohana CMS" (https://github.com/settings/developers) plus any leftover fine-grained/classic PATs in https://github.com/settings/tokens.
+- A stray Cloudflare Worker named **ohana** (static-assets deploy of the repo, ohana.oscarvh.workers.dev) is unused — candidate for deletion.
+- `~/proyectos/sveltia-cms-auth` local clone is dead code (worker deleted) — can be removed.
+- Helper scripts deleted from `~/proyectos/ohana-cms-api` because they contained the admin password; recreate them via the /editar UI or env-var-free methods if needed.
+- Dev server may still be running in WSL on port 8765 (check `ss -tlnp | grep 8765` inside WSL).
 
 ## Spec vs. reality
 `ohana-especificaciones.md` is the full intended design. Implemented: the ohana-cms-api Worker + `/editar/` mini-CMS (see above), `.github/workflows/deploy.yml`, git repo on `main` pushed to `oscarvh/ohana`, and Pages enabled (source = GitHub Actions). Still pending:
-- `src/css/style.css` is a placeholder; `src/images/` holds `logo-ohana.png` and is passed through to `/images`.
+- `src/css/style.css` is a placeholder; `src/images/` holds `logo-ohana.png` and `qr-ohana.png` and is passed through to `/images`.
