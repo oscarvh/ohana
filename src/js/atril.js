@@ -10,8 +10,8 @@
 
   // Tamaño de letra
   var stream = document.getElementById("lyrics-stream");
-  var sizes = ["1rem", "1.15rem", "1.35rem", "1.5rem"];
-  var lines = ["1.7rem", "2rem", "2.25rem", "2.5rem"];
+  var sizes = ["1rem", "1.15rem", "1.35rem", "1.5rem", "1.75rem", "2rem"];
+  var lines = ["1.7rem", "2rem", "2.25rem", "2.5rem", "2.9rem", "3.3rem"];
   var idx = 1;
   function applyFont() {
     if (!stream) return;
@@ -24,11 +24,12 @@
   if (dec) dec.addEventListener("click", function () { if (idx > 0) { idx--; applyFont(); } });
   applyFont();
 
-  // Pantalla completa (mantiene la pantalla encendida mientras dura)
+  // Modo letra + pantalla completa (mantiene la pantalla encendida mientras dura)
   var fsBtn = document.getElementById("btn-fullscreen");
   var fsText = document.getElementById("fullscreen-status-text");
   var fsIcon = document.getElementById("fullscreen-icon");
   var wakeLock = null;
+  var modoActivo = false;
 
   function requestWake() {
     if (!("wakeLock" in navigator)) return Promise.resolve(null);
@@ -41,45 +42,52 @@
   function releaseWake() {
     if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; }
   }
-  function updateFullscreen() {
-    var activo = document.fullscreenElement;
-    document.documentElement.classList.toggle("modo-letra", !!activo);
+  function pintarBoton(activo) {
     if (fsText) fsText.textContent = activo ? "Salir pantalla" : "Pantalla completa";
     if (fsIcon) fsIcon.textContent = activo ? "fullscreen_exit" : "fullscreen";
     if (fsBtn) {
       fsBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-md shadow-sm active:scale-95 transition-all " +
         (activo ? "bg-primary-container text-on-primary" : "bg-surface-container text-outline");
     }
-    if (activo) requestWake(); else releaseWake();
+  }
+  function setModo(activo) {
+    modoActivo = activo;
+    document.documentElement.classList.toggle("modo-letra", activo);
+    if (activo) window.scrollTo(0, 0);
+    pintarBoton(activo);
+    if (activo) requestWake();
+    else if (!document.fullscreenElement) releaseWake();
   }
 
   if (fsBtn) {
-    if (!document.documentElement.requestFullscreen) {
-      // Sin fullscreen (p. ej. iPhone): el botón solo evita que la pantalla se apague
-      var wakeActive = false;
-      var updateWake = function () {
-        wakeActive = !!wakeLock;
-        if (fsText) fsText.textContent = wakeActive ? "Pantalla activa" : "Evitar apagado";
-        if (fsIcon) fsIcon.textContent = wakeActive ? "screen_lock_portrait" : "mobile_off";
-      };
-      fsBtn.addEventListener("click", function () {
-        if (wakeLock) { releaseWake(); requestWake().then(updateWake); } else { requestWake().then(updateWake); }
-      });
-      updateWake();
-    } else {
+    if (document.documentElement.requestFullscreen) {
       fsBtn.addEventListener("click", function () {
         if (document.fullscreenElement) {
           document.exitFullscreen().catch(function () {});
+        } else if (modoActivo) {
+          setModo(false);
         } else {
-          document.documentElement.requestFullscreen().catch(function () {});
+          document.documentElement.requestFullscreen().catch(function () { setModo(true); });
         }
       });
-      document.addEventListener("fullscreenchange", updateFullscreen);
-      document.addEventListener("visibilitychange", function () {
-        if (!document.hidden && document.fullscreenElement) requestWake();
+      document.addEventListener("fullscreenchange", function () {
+        setModo(!!document.fullscreenElement);
       });
-      updateFullscreen();
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && (modoActivo || document.fullscreenElement)) requestWake();
+      });
+    } else {
+      // Sin fullscreen (p. ej. iPhone): modo lectura sin fullscreen nativo
+      fsBtn.addEventListener("click", function () {
+        if (modoActivo) {
+          setModo(false);
+        } else {
+          requestWake();
+          setModo(true);
+        }
+      });
     }
+    pintarBoton(false);
   }
 
   // Favorito

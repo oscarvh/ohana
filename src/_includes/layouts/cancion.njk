@@ -20,7 +20,7 @@ layout: layouts/base.njk
   <div class="flex flex-col w-full">
 
     <!-- Cabecera de la canción -->
-    <div class="w-full bg-surface-container-lowest rounded-2xl p-space-md shadow-sm mb-space-md relative overflow-hidden">
+    <div id="info-cancion" class="w-full bg-surface-container-lowest rounded-2xl p-space-md shadow-sm mb-space-md relative overflow-hidden">
       <div class="absolute -top-12 -right-12 w-32 h-32 bg-secondary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
       <div class="absolute -bottom-8 -left-8 w-28 h-28 bg-primary-fixed/40 rounded-full blur-xl pointer-events-none"></div>
       <div class="relative z-10 flex flex-col gap-space-xs">
@@ -40,8 +40,10 @@ layout: layouts/base.njk
     <style>
       html.modo-letra header { display: none !important; }
       html.modo-letra #nav-inferior { display: none !important; }
+      html.modo-letra #info-cancion { display: none !important; }
       html.modo-letra main { padding-top: 1rem !important; }
       html.modo-letra #controles-lectura { top: 0 !important; }
+      html.modo-letra #letra-card { margin-bottom: 0 !important; }
     </style>
     <div id="controles-lectura" class="sticky top-16 z-30 py-space-xs mb-space-md bg-surface/95 backdrop-blur-md">
       <div class="w-full bg-surface-container-high rounded-full p-1.5 shadow-md flex items-center justify-between gap-2">
