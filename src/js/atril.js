@@ -107,19 +107,4 @@
     }
   });
 
-  // Anterior / Siguiente
-  var nav = document.getElementById("song-nav");
-  if (nav) {
-    var songs = [];
-    try { songs = JSON.parse(nav.textContent); } catch (e) {}
-    if (songs.length) {
-      var current = songs.findIndex(function (s) { return s.url === window.location.pathname; });
-      if (current === -1) current = 0;
-      var go = function (i) { window.location.href = songs[i].url; };
-      var nextBtn = document.getElementById("nav-next");
-      var prevBtn = document.getElementById("nav-prev");
-      if (nextBtn) nextBtn.addEventListener("click", function () { go((current + 1) % songs.length); });
-      if (prevBtn) prevBtn.addEventListener("click", function () { go((current - 1 + songs.length) % songs.length); });
-    }
-  }
 })();
