@@ -1,0 +1,110 @@
+---
+layout: layouts/base.njk
+title: Cancionero
+permalink: /canciones/
+---
+{% set iconos = ["music_note", "graphic_eq", "piano", "waves", "nature_people", "child_care", "theater_comedy"] %}
+<main class="w-full max-w-2xl mx-auto px-margin pt-safe pb-24 flex flex-col gap-space-lg">
+
+  <!-- Tarjeta de bienvenida / evento -->
+  <section class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-surface-container-low via-surface-container to-secondary-fixed/30 p-space-md shadow-sm">
+    <div class="flex items-center justify-between gap-space-sm mb-space-xs">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+        </span>
+        <span class="text-label-sm text-secondary font-bold uppercase tracking-wider">Cancionero</span>
+      </div>
+      <span class="text-label-sm text-tertiary font-medium">Punta Indio</span>
+    </div>
+    <div class="flex items-start justify-between">
+      <div class="space-y-1">
+        <h2 class="font-serif text-headline-lg-mobile text-primary tracking-tight">¡Cantemos juntos en familia!</h2>
+        <p class="text-body-sm text-on-surface-variant">Orquesta Escuela de Punta Indio</p>
+      </div>
+      <div class="shrink-0 w-12 h-12 rounded-full bg-surface-container-lowest/80 flex items-center justify-center text-primary shadow-sm">
+        <span class="material-symbols-outlined text-[26px]">music_cast</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buscador -->
+  <section class="space-y-space-sm">
+    <div class="relative flex items-center">
+      <div class="absolute left-3.5 flex items-center pointer-events-none text-primary">
+        <span class="material-symbols-outlined text-[22px]">search</span>
+      </div>
+      <input id="song-search-input" type="search" aria-label="Buscar canciones del cancionero"
+        placeholder="Buscar canción, autor o categoría..."
+        class="w-full h-12 pl-11 pr-11 bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm rounded-xl shadow-[0_2px_12px_rgba(0,86,90,0.06)] focus:outline-none focus:ring-0 transition-all">
+      <button id="clear-search-btn" type="button" aria-label="Limpiar búsqueda"
+        class="absolute right-2.5 w-8 h-8 flex items-center justify-center rounded-lg text-outline-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <!-- Chips de categoría (generados desde la colección) -->
+    <div id="filtros" class="flex items-center gap-2 overflow-x-auto pb-1"></div>
+  </section>
+
+  <!-- Listado -->
+  <section id="song-list" aria-live="polite" class="flex flex-col gap-space-sm">
+    {% for c in collections.canciones %}
+    <article class="song-card group relative bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_4px_16px_-2px_rgba(14,112,117,0.06)] active:scale-[0.99] transition-transform duration-150"
+      data-titulo="{{ c.data.titulo | lower }}" data-autor="{{ c.data.autor | default('') | lower }}" data-categoria="{{ c.data.categoria | default('') }}">
+      <div class="flex items-start gap-space-sm">
+        <div class="w-12 h-12 rounded-xl {% if loop.first %}bg-gradient-to-tr from-primary to-secondary-container text-on-primary{% else %}bg-surface-container-high text-primary{% endif %} flex items-center justify-center shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-[26px]">{{ iconos[loop.index0 % 7] }}</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-1">
+            <h3 class="font-serif text-headline-md text-on-surface truncate tracking-tight">{{ c.data.titulo }}</h3>
+            <button type="button" aria-label="Guardar en favoritos"
+              class="favorite-toggle w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-secondary active:scale-90 transition-transform"
+              data-url="{{ c.url | url }}">
+              <span class="material-symbols-outlined text-[22px]">favorite</span>
+            </button>
+          </div>
+          {% if c.data.autor %}
+          <p class="text-label-md text-tertiary font-semibold truncate mt-0.5">{{ c.data.autor }}</p>
+          {% endif %}
+          {% if c.data.categoria %}
+          <div class="flex flex-wrap items-center gap-1.5 mt-2">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-fixed-variant text-label-sm">
+              {{ c.data.categoria }}
+            </span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="mt-space-sm pt-2 flex items-center justify-between">
+        <span class="text-label-sm text-on-surface-variant">Atril comunitario</span>
+        <a href="{{ c.url | url }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary text-on-primary text-label-md shadow-sm active:scale-95 transition-all">
+          <span>Ver letra &amp; cantar</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </a>
+      </div>
+    </article>
+    {% endfor %}
+  </section>
+
+  <!-- Estado vacío -->
+  <div id="empty-state" class="hidden flex-col items-center justify-center py-10 px-4 text-center rounded-2xl bg-surface-container-low">
+    <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-outline mb-2">
+      <span class="material-symbols-outlined text-[28px]">search_off</span>
+    </div>
+    <p class="font-serif text-headline-md text-on-surface mb-1">No encontramos esa melodía</p>
+    <p class="text-body-sm text-on-surface-variant">Probá buscando con otro nombre, autor o categoría.</p>
+  </div>
+
+  <!-- Footer comunitario -->
+  <footer id="orquesta" class="mt-space-sm pt-space-md text-center flex flex-col items-center gap-1">
+    <div class="flex items-center justify-center gap-1.5 text-secondary">
+      <span class="material-symbols-outlined text-[18px]">favorite</span>
+      <span class="text-label-sm font-semibold tracking-wider uppercase">Orquesta Escuela de Punta Indio</span>
+      <span class="material-symbols-outlined text-[18px]">favorite</span>
+    </div>
+    <p class="text-body-sm text-on-surface-variant italic">"Música para compartir, crecer y sentirnos en casa"</p>
+  </footer>
+</main>
+<script src="{{ '/js/buscador.js' | url }}" defer></script>

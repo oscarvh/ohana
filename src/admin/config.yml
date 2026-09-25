@@ -1,0 +1,27 @@
+backend:
+  name: github
+  repo: oscarvh/ohana
+  branch: main
+  # base_url: https://sveltia-cms-auth.TU-SUBDOMINIO.workers.dev   # <-- descomentar cuando esté el worker de auth
+
+media_folder: "src/images"
+public_folder: "/images"
+
+collections:
+  - name: "canciones"
+    label: "Canciones"
+    folder: "src/content/canciones"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: titulo
+    fields:
+      - { label: "Título", name: "titulo", widget: "string" }
+      - { label: "Autor / Arreglo", name: "autor", widget: "string", required: false }
+      - label: "Categoría"
+        name: "categoria"
+        widget: "select"
+        required: false
+        options: ["Navideña", "Patria", "Infantil", "Otra"]
+      - { label: "Orden", name: "orden", widget: "number", required: false, value_type: "int" }
+      - { label: "Letra", name: "body", widget: "markdown" }
