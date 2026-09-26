@@ -37,6 +37,15 @@ permalink: /compartir/
         <span class="material-symbols-outlined text-[20px]">share</span>
         Compartir
       </button>
+      <a id="btn-whatsapp" href="#" target="_blank" rel="noopener" aria-label="Compartir por WhatsApp"
+        class="flex items-center justify-center gap-1.5 flex-1 min-w-36 rounded-full font-semibold py-3 px-5 text-label-md shadow-sm active:scale-95 transition-all text-white"
+        style="background-color:#25D366">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.347-.347.52-.52.174-.174.232-.297.347-.495.115-.198.058-.371-.058-.52-.115-.148-.694-1.673-1.037-2.293-.23-.42-.5-.435-.736-.443-.184-.008-.395-.008-.606-.008-.212 0-.556.08-.847.397-.29.297-1.11 1.086-1.11 2.645 0 1.558 1.136 3.064 1.295 3.278.153.214 2.228 3.402 5.396 4.774.754.326 1.343.52 1.8.666.758.242 1.448.208 2.002.126.608-.091 1.87-.764 2.132-1.502.262-.737.262-1.37.184-1.502-.077-.131-.28-.213-.577-.362z"/>
+          <path d="M20.52 3.449C18.24 1.245 15.24 1.023 14.986 1.006a.964.964 0 0 0-.112-.005H9.014c-4.65 0-8.437 3.787-8.437 8.437v5.126c0 4.65 3.787 8.437 8.437 8.437h5.126c4.65 0 8.437-3.787 8.437-8.437V9.436l.005-.088a.964.964 0 0 0-.005-.112c-.017-.254-.24-3.254-2.458-5.532l-.099-.104zM12 21.42a9.42 9.42 0 0 1-9.42-9.42 9.42 9.42 0 0 1 9.42-9.42h2.874c.285.014 2.588.212 4.323 1.945 1.735 1.735 1.933 4.04 1.947 4.325v5.15a9.42 9.42 0 0 1-9.42 9.42z" fill-rule="evenodd"/>
+        </svg>
+        WhatsApp
+      </a>
     </div>
 
     <p id="mensaje-copiado" class="hidden text-label-md text-secondary font-semibold">Enlace copiado ✔</p>
@@ -73,5 +82,7 @@ permalink: /compartir/
         navigator.clipboard.writeText(ENLACE).then(function () { mostrarAviso(); }).catch(function () {});
       }
     });
+    var TEXTO = "Cantemos juntos 🎵 Cancionero Ohana — Orquesta Escuela de Punta Indio: " + ENLACE;
+    document.getElementById("btn-whatsapp").href = "https://wa.me/?text=" + encodeURIComponent(TEXTO);
   })();
 </script>
