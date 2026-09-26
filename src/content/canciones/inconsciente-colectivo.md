@@ -15,12 +15,12 @@ que se consume lo mejor que tenés.
 Te tira atrás, te pide más y más,
 y llega un punto en que no querés.
 
-Mamá, la libertad, siempre la llevarás
+Mama, la libertad, siempre la llevarás
 dentro del corazón.
 Te pueden corromper, te puedes olvidar,
 pero ella siempre está.
 
-Mamá, la libertad, siempre la llevarás
+Mama, la libertad, siempre la llevarás
 dentro del corazón.
 Te pueden corromper, te puedes olvidar,
 pero ella siempre está.
