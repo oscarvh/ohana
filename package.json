@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "eleventy --serve --port=8765",
-    "build": "eleventy"
+    "css": "tailwindcss -i src/css/style.css -o src/assets/main.css --minify",
+    "dev": "npm run css && eleventy --serve --port=8765",
+    "build": "npm run css && eleventy"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0"
+    "@11ty/eleventy": "^3.0.0",
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
   }
 }
